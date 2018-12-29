@@ -1,0 +1,8 @@
+appservice:
+  enabled: false
+  port: 8080
+  hsToken: "GiveThisALongString"
+  asToken: "GiveThisADifferentLongString"
+  userPrefix: "_minecraft_"
+  domain: "t2bot.io"
+  hsUrl: "https://t2bot.io"

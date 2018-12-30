@@ -18,7 +18,7 @@ public class ChatListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onChatMessage(AsyncPlayerChatEvent e) {
         try {
-            this.bridge.sendMessage("!QrQxqLruMjHFnRxrvs:dev.t2host.io", e.getPlayer().getUniqueId(), e.getMessage());
+            this.bridge.sendMatrixMessage("!QrQxqLruMjHFnRxrvs:dev.t2host.io", e.getPlayer().getUniqueId(), e.getMessage());
         } catch (MatrixException ex) {
             ex.printStackTrace();
         }

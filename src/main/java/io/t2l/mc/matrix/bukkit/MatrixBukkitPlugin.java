@@ -1,10 +1,14 @@
 package io.t2l.mc.matrix.bukkit;
 
-import io.t2l.mc.matrix.appservice.AppService;
-import io.t2l.mc.matrix.bridge.AppServiceBridge;
+import io.t2l.mc.matrix.LogService;
+import io.t2l.mc.matrix.appservice.Appservice;
+import io.t2l.mc.matrix.bridge.AppserviceBridge;
 import io.t2l.mc.matrix.bridge.IBridge;
+import io.t2l.mc.matrix.minecraft.IMinecraft;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
 
 public class MatrixBukkitPlugin extends JavaPlugin {
 
@@ -14,21 +18,27 @@ public class MatrixBukkitPlugin extends JavaPlugin {
         return instance;
     }
 
+    private IBridge bridge;
+
     @Override
     public void onEnable() {
         instance = this;
-        IBridge bridge = null;
+        LogService.setLogger(this.getLogger());
+        this.bridge = null; // just in case we were reloaded
+
+        IMinecraft minecraft = new BukkitMinecraft(this);
 
         this.saveDefaultConfig();
         if (this.getConfig().getBoolean("appservice.enabled", false)) {
             this.getLogger().info("Bridging to Matrix via the configured appservice");
-            bridge = new AppServiceBridge(new AppService(
+            bridge = new AppserviceBridge(new Appservice(
+                    this.getConfig().getInt("appservice.port", 8080),
                     this.getConfig().getString("appservice.hsToken", "GENERATE_ME"),
                     this.getConfig().getString("appservice.asToken", "GENERATE_ME"),
                     this.getConfig().getString("appservice.userPrefix", "_minecraft_"),
                     this.getConfig().getString("appservice.domain", "matrix.org"),
                     this.getConfig().getString("appservice.hsUrl", "https://matrix.org")
-            ));
+            ), minecraft);
         }
 
         if (bridge == null) {
@@ -37,6 +47,26 @@ public class MatrixBukkitPlugin extends JavaPlugin {
             return;
         }
 
+        try {
+            this.getLogger().info("Starting bridge handler...");
+            bridge.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         Bukkit.getPluginManager().registerEvents(new ChatListener(bridge), this);
+    }
+
+    @Override
+    public void onDisable() {
+        if (this.bridge != null) {
+            try {
+                this.bridge.stop();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

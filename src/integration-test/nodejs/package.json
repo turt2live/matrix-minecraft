@@ -1,0 +1,9 @@
+{
+  "name": "integration-test-client",
+  "version": "1.0.0",
+  "description": "Test client for integrations",
+  "main": "index.js",
+  "dependencies": {
+    "minecraft-protocol": "^1.8.3"
+  }
+}

@@ -1,0 +1,8 @@
+appservice:
+  enabled: true
+  port: 8080
+  hsToken: "abc123"
+  asToken: "abc123"
+  userPrefix: "_minecraft_"
+  domain: "localhost"
+  hsUrl: "http://localhost:8008"

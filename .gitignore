@@ -3,6 +3,18 @@
 build/
 out/
 
+src/integration-test/resources/plugin/**
+src/integration-test/resources/servers/**
+!src/integration-test/resources/plugin/.gitkeep
+!src/integration-test/resources/plugin/MatrixMinecraft.yml
+!src/integration-test/resources/servers/.gitkeep
+!src/integration-test/resources/servers/server.properties
+
+misc/**
+!misc/.gitkeep
+
+node_modules
+
 # Compiled class file
 *.class
 
